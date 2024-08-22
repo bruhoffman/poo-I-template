@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express'
 import cors from 'cors'
 import { TAccountDB, TAccountDBPost, TUserDB, TUserDBPost } from './types'
 import { db } from './database/knex'
+import { User } from './models/User'
 
 const app = express()
 
@@ -84,7 +85,7 @@ app.post("/users", async (req: Request, res: Response) => {
             throw new Error("'password' deve ser string")
         }
 
-        const [ userDBExists ]: TUserDB[] | undefined[] = await db("users").where({ id })
+        const [userDBExists]: TUserDB[] | undefined[] = await db("users").where({ id })
 
         if (userDBExists) {
             res.status(400)
@@ -99,7 +100,7 @@ app.post("/users", async (req: Request, res: Response) => {
         }
 
         await db("users").insert(newUser)
-        const [ userDB ]: TUserDB[] = await db("users").where({ id })
+        const [userDB]: TUserDB[] = await db("users").where({ id })
 
         res.status(201).send(userDB)
     } catch (error) {
@@ -141,7 +142,7 @@ app.get("/accounts/:id/balance", async (req: Request, res: Response) => {
     try {
         const id = req.params.id
 
-        const [ accountDB ]: TAccountDB[] | undefined[] = await db("accounts").where({ id })
+        const [accountDB]: TAccountDB[] | undefined[] = await db("accounts").where({ id })
 
         if (!accountDB) {
             res.status(404)
@@ -179,7 +180,7 @@ app.post("/accounts", async (req: Request, res: Response) => {
             throw new Error("'ownerId' deve ser string")
         }
 
-        const [ accountDBExists ]: TAccountDB[] | undefined[] = await db("accounts").where({ id })
+        const [accountDBExists]: TAccountDB[] | undefined[] = await db("accounts").where({ id })
 
         if (accountDBExists) {
             res.status(400)
@@ -192,7 +193,7 @@ app.post("/accounts", async (req: Request, res: Response) => {
         }
 
         await db("accounts").insert(newAccount)
-        const [ accountDB ]: TAccountDB[] = await db("accounts").where({ id })
+        const [accountDB]: TAccountDB[] = await db("accounts").where({ id })
 
         res.status(201).send(accountDB)
     } catch (error) {
@@ -220,7 +221,7 @@ app.put("/accounts/:id/balance", async (req: Request, res: Response) => {
             throw new Error("'value' deve ser number")
         }
 
-        const [ accountDB ]: TAccountDB[] | undefined[] = await db("accounts").where({ id })
+        const [accountDB]: TAccountDB[] | undefined[] = await db("accounts").where({ id })
 
         if (!accountDB) {
             res.status(404)
@@ -230,7 +231,7 @@ app.put("/accounts/:id/balance", async (req: Request, res: Response) => {
         accountDB.balance += value
 
         await db("accounts").update({ balance: accountDB.balance }).where({ id })
-        
+
         res.status(200).send(accountDB)
     } catch (error) {
         console.log(error)
