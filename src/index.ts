@@ -40,12 +40,21 @@ app.get("/users", async (req: Request, res: Response) => {
         if (q) {
             const result: TUserDB[] = await db("users").where("name", "LIKE", `%${q}%`)
             usersDB = result
+
         } else {
             const result: TUserDB[] = await db("users")
             usersDB = result
         }
 
-        res.status(200).send(usersDB)
+        const users: User[] = usersDB.map((userDB) => new User(
+            userDB.id,
+            userDB.name,
+            userDB.email,
+            userDB.password,
+            userDB.created_at
+        ))
+
+        res.status(200).send(users)
     } catch (error) {
         console.log(error)
 
@@ -164,7 +173,6 @@ app.get("/accounts/:id/balance", async (req: Request, res: Response) => {
         }
     }
 })
-
 
 app.post("/accounts", async (req: Request, res: Response) => {
     try {
