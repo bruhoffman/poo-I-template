@@ -101,17 +101,28 @@ app.post("/users", async (req: Request, res: Response) => {
             throw new Error("'id' já existe")
         }
 
-        const newUser: TUserDBPost = {
+        // 1 - Instânciar os dados vindos do body
+        const newUser = new User(
             id,
             name,
             email,
-            password
+            password,
+            new Date().toISOString()
+        )
+
+        // 2 - Objeto simples para MODELAR as infos para o D
+        const newUserDB = {
+            id: newUser.getId(),
+            name: newUser.getName(),
+            email: newUser.getEmail(),
+            password: newUser.getPassword(),
+            created_at: newUser.getCreatedAt()
         }
 
-        await db("users").insert(newUser)
-        const [userDB]: TUserDB[] = await db("users").where({ id })
+        await db("users").insert(newUserDB)
+        
+        res.status(201).send("Usuário cadastrado com sucesso!")
 
-        res.status(201).send(userDB)
     } catch (error) {
         console.log(error)
 
