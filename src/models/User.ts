@@ -7,43 +7,43 @@ export class User {
         private created_at: string
     ) { }
 
-    public getId = (): string => {
+    public getId(): string {
         return this.id
     }
 
-    public setId = (newId: string): void => {
-        this.id = newId
+    public setId(value: string): void {
+        this.id = value
     }
 
-    public getName = (): string => {
+    public getName(): string {
         return this.name
     }
 
-    public setName = (newName: string): void => {
-        this.name = newName
+    public setName(value: string): void {
+        this.name = value
     }
 
-    public getEmail = (): string => {
+    public getEmail(): string {
         return this.email
     }
 
-    public setEmail = (newEmail: string): void => {
-        this.email = newEmail
+    public setEmail(value: string): void {
+        this.email = value
     }
 
-    public getPassword = (): string => {
+    public getPassword(): string {
         return this.password
     }
 
-    public setPassword = (newPassword: string): void => {
-        this.password = newPassword
+    public setPassword(value: string): void {
+        this.password = value
     }
 
-    public getCreatedAt = (): string => {
+    public getCreatedAt(): string {
         return this.created_at
     }
 
-    public setCreatedAt = (newCreatedAt: string): void => {
-        this.created_at = newCreatedAt
+    public setCreatedAt(value: string): void {
+        this.created_at = value
     }
 }
