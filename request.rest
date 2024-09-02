@@ -8,12 +8,15 @@ POST http://localhost:3003/users
 Content-Type: application/json 
 
 {
-    "id": "u005",
-    "name": "Euclana",
-    "email": "clana@email.com",
+    "id": "u003",
+    "name": "Ciclana",
+    "email": "lana@email.com",
     "password": "456654852"
 }
 ###
 
 GET http://localhost:3003/accounts
+###
+
+GET http://localhost:3003/accounts/a001
 ###

@@ -3,6 +3,7 @@ import cors from 'cors'
 import { TAccountDB, TAccountDBPost, TUserDB, TUserDBPost } from './types'
 import { db } from './database/knex'
 import { User } from './models/User'
+import { Account } from './models/Accounts'
 
 const app = express()
 
@@ -33,7 +34,7 @@ app.get("/ping", async (req: Request, res: Response) => {
 
 app.get("/users", async (req: Request, res: Response) => {
     try {
-        const q = req.query.q
+        const q = req.query.q as string | undefined
 
         let usersDB
 
@@ -55,6 +56,7 @@ app.get("/users", async (req: Request, res: Response) => {
         ))
 
         res.status(200).send(users)
+
     } catch (error) {
         console.log(error)
 
@@ -110,7 +112,7 @@ app.post("/users", async (req: Request, res: Response) => {
             new Date().toISOString()
         )
 
-        // 2 - Objeto simples para MODELAR as infos para o D
+        // 2 - Objeto simples para MODELAR as infos para o DB
         const newUserDB = {
             id: newUser.getId(),
             name: newUser.getName(),
@@ -120,7 +122,7 @@ app.post("/users", async (req: Request, res: Response) => {
         }
 
         await db("users").insert(newUserDB)
-        
+
         res.status(201).send("Usuário cadastrado com sucesso!")
 
     } catch (error) {
@@ -142,7 +144,14 @@ app.get("/accounts", async (req: Request, res: Response) => {
     try {
         const accountsDB: TAccountDB[] = await db("accounts")
 
-        res.status(200).send(accountsDB)
+        const accounts: Account[] = accountsDB.map((account) => new Account(
+            account.id,
+            account.balance,
+            account.owner_id,
+            account.created_at
+        ))
+
+        res.status(200).send(accounts)
     } catch (error) {
         console.log(error)
 
@@ -169,7 +178,18 @@ app.get("/accounts/:id/balance", async (req: Request, res: Response) => {
             throw new Error("'id' não encontrado")
         }
 
-        res.status(200).send({ balance: accountDB.balance })
+        const account = new Account(
+            accountDB.id,
+            accountDB.balance,
+            accountDB.owner_id,
+            accountDB.created_at
+        )
+
+        const balance = account.getBalance
+        console.log(account)
+
+        res.status(200).send({ balance })
+
     } catch (error) {
         console.log(error)
 
