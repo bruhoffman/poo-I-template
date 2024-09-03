@@ -20,3 +20,20 @@ GET http://localhost:3003/accounts
 
 GET http://localhost:3003/accounts/a001
 ###
+
+POST http://localhost:3003/accounts
+Content-Type:  application/json
+
+{
+    "id": "a003",
+    "ownerId": "u003"
+}
+###
+
+PUT http://localhost:3003/accounts/a001
+Content-Type:  application/json
+
+{
+    "value": 1000
+}
+###

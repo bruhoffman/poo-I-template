@@ -226,15 +226,24 @@ app.post("/accounts", async (req: Request, res: Response) => {
             throw new Error("'id' já existe")
         }
 
-        const newAccount: TAccountDBPost = {
+        const newAccount = new Account(
             id,
-            owner_id: ownerId
+            0,
+            ownerId,
+            new Date().toISOString()
+        )
+
+        const newAccountDB = {
+            id: newAccount.getId(),
+            balance: newAccount.getBalance(),
+            owner_Id: newAccount.getOwnerId(),
+            created_at: newAccount.getCreatedAt()
         }
 
-        await db("accounts").insert(newAccount)
-        const [accountDB]: TAccountDB[] = await db("accounts").where({ id })
+        await db("accounts").insert(newAccountDB)
 
-        res.status(201).send(accountDB)
+        res.status(201).send("Conta cadastrada com sucesso!")
+
     } catch (error) {
         console.log(error)
 
@@ -267,11 +276,21 @@ app.put("/accounts/:id/balance", async (req: Request, res: Response) => {
             throw new Error("'id' não encontrado")
         }
 
-        accountDB.balance += value
 
-        await db("accounts").update({ balance: accountDB.balance }).where({ id })
+        const account = new Account(
+            accountDB.id,
+            accountDB.balance,
+            accountDB.owner_id,
+            accountDB.created_at
+        )
 
-        res.status(200).send(accountDB)
+        const newBalance = account.getBalance() + value
+        account.setBalance(newBalance)
+
+        await db("accounts").update({ balance: newBalance }).where({ id })
+
+        res.status(200).send(account)
+
     } catch (error) {
         console.log(error)
 
